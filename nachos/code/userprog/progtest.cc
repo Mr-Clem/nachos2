@@ -1,11 +1,11 @@
-// progtest.cc 
+// progtest.cc
 //      Test routines for demonstrating that Nachos can load
-//      a user program and execute it.  
+//      a user program and execute it.
 //
 //      Also, routines for testing the Console hardware device.
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
@@ -13,7 +13,7 @@
 #include "console.h"
 #include "addrspace.h"
 #include "synch.h"
-
+#include "synchconsole.h"
 //----------------------------------------------------------------------
 // StartProcess
 //      Run a user program.  Open the executable, load it into
@@ -79,7 +79,6 @@ WriteDoneHandler (void *arg)
 //      Test the console by echoing characters typed at the input onto
 //      the output.  Stop when the user types a 'q'.
 //----------------------------------------------------------------------
-
 void
 ConsoleTest (const char *in, const char *out)
 {
@@ -93,14 +92,47 @@ ConsoleTest (const char *in, const char *out)
       {
 	  readAvail->P ();	// wait for character to arrive
 	  ch = console->GetChar ();
+	  #ifdef CHANGED
+	  if(ch!='\n'){
+	    console->PutChar ('<');
+	    writeDone->P ();
+	  }
 	  console->PutChar (ch);	// echo it!
-	  writeDone->P ();	// wait for write to finish
+	  writeDone->P ();
+	  if(ch!='\n'){
+	    console->PutChar ('>');
+	    writeDone->P ();	// wait for write to finish
+	  }
+
 	  if (ch == 'q') {
 	      printf ("Nothing more, bye!\n");
 	      break;		// if q, quit
 	  }
+	  if (ch == EOF){
+	    printf ("Au revoir!");
+	    break;
+	  }
+	  #endif // CHANGED
       }
     delete console;
     delete readAvail;
     delete writeDone;
 }
+
+#ifdef CHANGED
+void
+SynchConsoleTest (const char *in, const char *out)
+{
+  char ch;
+  SynchConsole *test_synchconsole = new SynchConsole(in, out);
+  while ((ch = test_synchconsole->SynchGetChar() ) != EOF){
+    if(ch != '\n')
+      test_synchconsole->SynchPutChar('<');
+    test_synchconsole->SynchPutChar(ch);
+    if(ch != '\n')
+      test_synchconsole->SynchPutChar('>');
+  }
+  fprintf(stderr, "EOF detected in SynchConsole!\n");
+  delete test_synchconsole;
+}
+#endif //CHANGED
