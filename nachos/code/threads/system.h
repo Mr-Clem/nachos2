@@ -17,8 +17,8 @@
 #include "timer.h"
 
 #ifdef CHANGED
-int MAX_STRING_SIZE = 1000;
-#endif//CHANGED
+#define MAX_STRING_SIZE 256
+#endif //CHANGED
 
 // Initialization and cleanup routines
 extern void Initialize (int argc, char **argv);	// Initialization,
