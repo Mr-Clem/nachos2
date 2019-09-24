@@ -121,6 +121,7 @@ main (int argc, char **argv)
       if (!strcmp (*argv, "-x"))
 	{			// run a user program
 	  ASSERT (argc > 1);
+      synchconsole = new SynchConsole(NULL,NULL);
 	  StartProcess (*(argv + 1));
 	  argCount = 2;
 	}
@@ -133,7 +134,6 @@ main (int argc, char **argv)
 	  else
 	    {
 	      ASSERT (argc > 2);
-        printf("coucou ta mere");
 	      ConsoleTest (*(argv + 1), *(argv + 2));
 	      argCount = 3;
 	    }
@@ -143,12 +143,10 @@ main (int argc, char **argv)
 	{			// test the synchconsole
 	  if (argc == 1){
 	    SynchConsoleTest (NULL, NULL);
-      printf("coucou ta reup");
     }
 	  else
 	    {
 	      ASSERT (argc > 2);
-        printf("coucou ta mere");
 	      SynchConsoleTest (*(argv + 1), *(argv + 2));
 	      argCount = 3;
 	    }
