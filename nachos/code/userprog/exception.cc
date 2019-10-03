@@ -66,9 +66,8 @@ UpdatePC ()
 #ifdef CHANGED
 int copyStringFromMachine(int from, char *to, unsigned size)
 {
-    //ReadMem(int addr, int size, int *value)
     int value;
-    int nbChar=0;
+    unsigned int nbChar=0;
     while(nbChar<size){
         machine->ReadMem(from+nbChar, 1, &value);
         if((char)value != '\0'){
@@ -102,7 +101,14 @@ ExceptionHandler (ExceptionType which)
 		    break;
         }
 #ifdef CHANGED
-	  case SC_PutChar:
+        case SC_Exit:
+        {
+        DEBUG('s', "Exit\n");
+        printf("\nreturn value %d\n\n",machine->ReadRegister(2));
+        interrupt->Halt ();
+        break;
+        }
+        case SC_PutChar:
 	    {
 	      DEBUG ('s', "PutChar\n ");
 	      synchconsole->SynchPutChar(machine->ReadRegister(4));
@@ -111,8 +117,7 @@ ExceptionHandler (ExceptionType which)
         case SC_PutString:
         {
             DEBUG ('s', "PutString\n");
-            //copyStringFromMachine(int from, char *to, unsigned size)
-            int to[MAX_STRING_SIZE];
+            char to[MAX_STRING_SIZE];
             int from = machine->ReadRegister(4);
             int StringSize = MAX_STRING_SIZE;
             int LC = 0;     //Loop Counter
