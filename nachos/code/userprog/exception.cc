@@ -70,7 +70,7 @@ int copyStringFromMachine(int from, char *to, unsigned size)
     unsigned int nbChar=0;
     while(nbChar<size){
         machine->ReadMem(from+nbChar, 1, &value);
-        if((char)value != '\0'){
+        if((char)value != '\0'){slope
             to[nbChar]= (char)value;
             nbChar++;
         }
@@ -81,6 +81,20 @@ int copyStringFromMachine(int from, char *to, unsigned size)
     to[nbChar]= '\0';
 
     return nbChar;
+}
+
+int copyStringToMachine(char* from, int to, unsigned size)
+{
+  int nbChar = 0;
+  while ((unsigned)nbChar < size) {
+      if (from[nbChar] == '\0' || from[nbChar] == EOF){
+	       break;
+      }
+      machine->WriteMem(to+nbChar, 1, (int) from[nbChar]);
+      nbChar += 1;
+  }
+  machine->WriteMem(to+nbChar, 1, '\0');
+  return nbChar;
 }
 #endif//CHANGED
 void
@@ -103,16 +117,16 @@ ExceptionHandler (ExceptionType which)
 #ifdef CHANGED
         case SC_Exit:
         {
-        DEBUG('s', "Exit\n");
-        printf("\nreturn value %d\n\n",machine->ReadRegister(2));
-        interrupt->Halt ();
-        break;
+          DEBUG('s', "Exit\n");
+          printf("\nreturn value %d\n\n",machine->ReadRegister(2));
+          interrupt->Halt ();
+          break;
         }
         case SC_PutChar:
 	    {
-	      DEBUG ('s', "PutChar\n ");
-	      synchconsole->SynchPutChar(machine->ReadRegister(4));
-	      break;
+	       DEBUG ('s', "PutChar\n ");
+	       synchconsole->SynchPutChar(machine->ReadRegister(4));
+	       break;
 	    }
         case SC_PutString:
         {
@@ -129,6 +143,36 @@ ExceptionHandler (ExceptionType which)
                 LC++;
             }
             break;
+        }
+        case SC_GetChar:
+        {
+          DEBUG('s', "GetChar\n");
+          machine->WriteRegister(2, synchconsole->SynchGetChar());
+          break;
+        }
+        case SC_GetString:
+        {
+          DEBUG ('s', "GetString\n");
+	        int size = machine->ReadRegister(5);
+	        char from[size];
+	        int to = machine->ReadRegister(4);
+	        synchconsole->SynchGetString(from, size);
+	        copyStringToMachine(from, to, size);
+	        break;
+        }
+        case SC_PutInt:
+        {
+          DEBUG('s', "PutInt\n");
+          synchconsole->SynchPutInt(machine->ReadRegister(4));
+          break;
+        }
+        case SC_GetInt:
+        {
+          DEBUG('s', "GetInt\n");
+          int n;
+          synchconsole->SynchGetInt(&n);
+          machine->WriteMem(machine->ReadRegister(4), 4, n);
+          break;
         }
 #endif//CHANGED
 		default:
