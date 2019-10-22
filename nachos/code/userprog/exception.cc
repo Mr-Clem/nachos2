@@ -24,6 +24,7 @@
 #include "copyright.h"
 #include "system.h"
 #include "syscall.h"
+#include "userthread.h"
 
 //----------------------------------------------------------------------
 // UpdatePC : Increments the Program Counter register in order to resume
@@ -70,7 +71,7 @@ int copyStringFromMachine(int from, char *to, unsigned size)
     unsigned int nbChar=0;
     while(nbChar<size){
         machine->ReadMem(from+nbChar, 1, &value);
-        if((char)value != '\0'){slope
+        if((char)value != '\0'){
             to[nbChar]= (char)value;
             nbChar++;
         }
@@ -172,6 +173,16 @@ ExceptionHandler (ExceptionType which)
           int n;
           synchconsole->SynchGetInt(&n);
           machine->WriteMem(machine->ReadRegister(4), 4, n);
+          break;
+        }
+        case SC_ThreadCreate:
+        {
+          DEBUG('s', "ThreadCreate\n");
+          break;
+        }
+        case SC_ThreadExit:
+        {
+          DEBUG('s', "ThreadExit\n");
           break;
         }
 #endif//CHANGED

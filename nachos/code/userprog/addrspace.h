@@ -1,5 +1,5 @@
-// addrspace.h 
-//      Data structures to keep track of executing user programs 
+// addrspace.h
+//      Data structures to keep track of executing user programs
 //      (address spaces).
 //
 //      For now, we don't keep any information about address spaces.
@@ -7,7 +7,7 @@
 //      executing the user program (see thread.h).
 //
 // Copyright (c) 1992-1993 The Regents of the University of California.
-// All rights reserved.  See copyright.h for copyright notice and limitation 
+// All rights reserved.  See copyright.h for copyright notice and limitation
 // of liability and disclaimer of warranty provisions.
 
 #ifndef ADDRSPACE_H
@@ -33,13 +33,15 @@ class AddrSpace:dontcopythis
     // before jumping to user code
 
     void SaveState ();		// Save/restore address space-specific
-    void RestoreState ();	// info on a context switch 
+    void RestoreState ();	// info on a context switch
 
     unsigned Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
 		    unsigned physical_x, unsigned virtual_y, unsigned y,
 		    unsigned blocksize);
 				// Dump program layout as SVG
     unsigned NumPages() { return numPages; }
+
+    int AllocateUserStack();
 
   private:
     NoffHeader noffH;		// Program layout
