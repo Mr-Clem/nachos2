@@ -39,13 +39,13 @@ int do_ThreadCreate(int f, int arg){
   int schmurtz[2];
   schmurtz[0]=f;
   schmurtz[1]=arg;
-
+  DEBUG('x',"f vaut: %d\narg vaut: %d\n", schmurtz[0], schmurtz[1]);
   newThread->Start(StartUserThread, schmurtz);
 
   return 0;
 }
 
-void do_threadExit(){
+void do_ThreadExit(){
   currentThread->Finish();
 }
 

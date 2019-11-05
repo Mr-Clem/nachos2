@@ -178,11 +178,17 @@ ExceptionHandler (ExceptionType which)
         case SC_ThreadCreate:
         {
           DEBUG('s', "ThreadCreate\n");
+          int f = machine->ReadRegister(4);
+          int args = machine->ReadRegister(5);
+          DEBUG('s',"s:%d\n",args);
+          DEBUG('s',"f:%d\n",f);
+          do_ThreadCreate(f,args);
           break;
         }
         case SC_ThreadExit:
         {
           DEBUG('s', "ThreadExit\n");
+          do_ThreadExit();
           break;
         }
 #endif//CHANGED
