@@ -36,7 +36,7 @@ int do_ThreadCreate(int f, int arg){
 
   Thread* newThread = new Thread("newThread");
 
-  int schmurtz[2];
+  int* schmurtz = new int[2];
   schmurtz[0]=f;
   schmurtz[1]=arg;
   DEBUG('x',"f vaut: %d\narg vaut: %d\n", schmurtz[0], schmurtz[1]);
