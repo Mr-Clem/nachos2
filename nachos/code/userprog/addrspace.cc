@@ -296,7 +296,7 @@ AddrSpace::RestoreState ()
 }
 
 int
-AddrSpace::AllocateUserStack()
+AddrSpace::AllocateUserStack(int NOT)
 {
-  return numPages*PageSize-256;
+  return numPages*PageSize-256*NOT;
 }

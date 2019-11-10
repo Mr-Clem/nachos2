@@ -165,7 +165,7 @@ PutString:
 
     .globl GetChar
     .ent	GetChar
-GetChar:
+GetChar:move	$4,$0
     addiu $2,$0,SC_GetChar
     syscall
     j	$31

@@ -8,6 +8,11 @@ static Semaphore *readAvail;
 static Semaphore *writeDone;
 static Semaphore *m_getstring;
 static Semaphore *m_putstring;
+static Lock *mutex_w;
+static Lock *mutex_r;
+static Lock *mutex_ws;
+static Lock *mutex_rs;
+
 
 static void ReadAvailHandler(void *arg){
   (void) arg; readAvail->V();
@@ -22,8 +27,10 @@ SynchConsole::SynchConsole(const char *in, const char *out)
   readAvail = new Semaphore("read avail", 0);
   writeDone = new Semaphore("write done", 0);
   console = new Console(in, out, ReadAvailHandler, WriteDoneHandler, NULL);
-  m_getstring = new Semaphore("m_getstring", 1);
-  m_putstring = new Semaphore("m_putstring", 1);
+  mutex_r = new Lock("mutex_r");
+  mutex_w = new Lock("mutex_w");
+  mutex_rs = new Lock("mutex_rs");
+  mutex_ws = new Lock("mutex_ws");
 }
 
 SynchConsole::~SynchConsole()
@@ -35,20 +42,25 @@ SynchConsole::~SynchConsole()
 
 void SynchConsole::SynchPutChar(int ch)
 {
+  mutex_w->Acquire();
   console->PutChar (ch);
   writeDone->P();
+  mutex_w->Release();
 }
 
 int SynchConsole::SynchGetChar()
 {
   int ch;
   readAvail->P ();
+  mutex_r->Acquire();
   ch = console->GetChar();
+  mutex_r->Release();
   return ch;
 }
 
 void SynchConsole::SynchPutString(const char s[])
 {
+    mutex_ws->Acquire();
     if (s == NULL){
         return;
     }
@@ -59,14 +71,14 @@ void SynchConsole::SynchPutString(const char s[])
         SynchPutChar(s[i]);
         i++;
     }
-    m_putstring->V();
+    mutex_ws->Release();
 }
 
 void SynchConsole::SynchGetString(char *s, int n)
 {
   char ch;
   int i=0;
-
+  mutex_rs->Acquire();
   if(s==NULL)
     return;
 
@@ -85,7 +97,7 @@ void SynchConsole::SynchGetString(char *s, int n)
     i++;
   }
   s[i]='\0';
-  m_getstring->V();
+  mutex_rs->Release();
 }
 
 void SynchConsole::SynchPutInt(int n)

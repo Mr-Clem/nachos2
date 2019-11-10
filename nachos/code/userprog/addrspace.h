@@ -19,11 +19,15 @@
 #include "noff.h"
 #include "list.h"
 
-#define UserStacksAreaSize		1024	// increase this as necessary!
+#define UserStacksAreaSize		4096	// increase this as necessary!
 
 class AddrSpace:dontcopythis
 {
   public:
+    #ifdef CHANGED
+    int MAX_THREAD = (UserStacksAreaSize/256);
+    int nb_thread = 0;
+    #endif //CHANGED
     AddrSpace (OpenFile * executable);	// Create an address space,
     // initializing it with the program
     // stored in the file "executable"
@@ -41,7 +45,7 @@ class AddrSpace:dontcopythis
 				// Dump program layout as SVG
     unsigned NumPages() { return numPages; }
 
-    int AllocateUserStack();
+    int AllocateUserStack(int NOT);
 
   private:
     NoffHeader noffH;		// Program layout

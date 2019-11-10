@@ -180,9 +180,13 @@ ExceptionHandler (ExceptionType which)
           DEBUG('s', "ThreadCreate\n");
           int f = machine->ReadRegister(4);
           int args = machine->ReadRegister(5);
-          DEBUG('s',"s:%d\n",args);
+          DEBUG('s',"arg:%d\n",args);
           DEBUG('s',"f:%d\n",f);
-          do_ThreadCreate(f,args);
+          int id = do_ThreadCreate(f,args);
+          if(id == -1){
+            synchconsole->SynchPutString("Can't create anymore");
+            interrupt->Halt();
+          }
           break;
         }
         case SC_ThreadExit:
