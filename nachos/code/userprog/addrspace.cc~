@@ -21,17 +21,13 @@
 #include "noff.h"
 #include "syscall.h"
 #include "new"
-#ifdef CHANGED
-#include "synch.h"
-Lock* m_bitmap = new Lock("m_bitmap");
-#endif//CHANGED
+
 //----------------------------------------------------------------------
 // SwapHeader
 //      Do little endian to big endian conversion on the bytes in the
 //      object file header, in case the file was generated on a little
 //      endian machine, and we're now running on a big endian machine.
 //----------------------------------------------------------------------
-
 
 static void
 SwapHeader (NoffHeader * noffH)
@@ -132,9 +128,6 @@ AddrSpace::AddrSpace (OpenFile * executable)
 
     pageTable[0].valid = FALSE;			// Catch NULL dereference
 
-#ifdef CHANGED
-    threadTable = new BitMap(MAX_THREAD);
-#endif//CHANGED
     AddrSpaceList.Append(this);
 }
 
@@ -148,7 +141,6 @@ AddrSpace::~AddrSpace ()
   // LB: Missing [] for delete
   // delete pageTable;
   delete [] pageTable;
-  delete threadTable;
   // End of modification
 
   AddrSpaceList.Remove(this);
@@ -303,21 +295,8 @@ AddrSpace::RestoreState ()
     machine->pageTableSize = numPages;
 }
 
-/*int
+int
 AddrSpace::AllocateUserStack(int NOT)
 {
-  return (numPages*PageSize)- (256*NOT);
-}*/
-int*
-AddrSpace::AllocateUserStack()
-{
-  int* tab = new int[2];
-  m_bitmap->Acquire();
-  int freePage = threadTable->Find();
-  m_bitmap->Release();
-  tab[0]=freePage;
-  if (freePage != -1)
-    freePage = (numPages*PageSize)-(256*(freePage+1));
-  tab[1]=freePage;
-  return tab;
+  return numPages*PageSize-256*NOT;
 }

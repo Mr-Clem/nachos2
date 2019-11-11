@@ -22,15 +22,16 @@ static void StartUserThread(void *schmurtz){
     machine->WriteRegister (i, 0);
 
   machine->WriteRegister (PCReg, f);
-  DEBUG('x', "f: %d, reading register: %d", f, machine->ReadRegister(PCReg));
+  DEBUG('x', "\nf: %d, reading register: %d\n", f, machine->ReadRegister(PCReg));
   machine->WriteRegister(4, arg);
-  DEBUG('x', "arg %d, reading register 4 : %d", arg, machine->ReadRegister(4));
+  DEBUG('x', "arg %d, reading register 4 : %d\n", arg, machine->ReadRegister(4));
   machine->WriteRegister (NextPCReg, machine->ReadRegister(PCReg) + 4);
-  DEBUG('x', "reading PCReg+4: %d, reading NextPCReg: %d", machine->ReadRegister(PCReg) + 4, machine->ReadRegister(NextPCReg));
-  
+  DEBUG('x', "reading PCReg+4: %d, reading NextPCReg: %d\n", machine->ReadRegister(PCReg) + 4, machine->ReadRegister(NextPCReg));
+
+  DEBUG('x', "nb_thread %d\n", currentThread->space->nb_thread);
   int stackTop = currentThread->space->AllocateUserStack(currentThread->space->nb_thread);
   machine->WriteRegister(StackReg, stackTop);
-  DEBUG('x', "stacktop: %d, reading StackReg: %d", stackTop, machine->ReadRegister(StackReg));
+  DEBUG('x', "stacktop: %d, reading StackReg: %d\n\n", stackTop, machine->ReadRegister(StackReg));
   
   machine->Run();
 }
@@ -56,13 +57,10 @@ int do_ThreadCreate(int f, int arg){
 }
 
 void do_ThreadExit(){
-  DEBUG('w', "namyst <3");
   if(currentThread->space->nb_thread>0){
 
     currentThread->space->nb_thread --;
-    DEBUG('w', "destruction\n");
   }else{
-    DEBUG('w', "au revoir ta mere la guermouche");
     interrupt->Halt();
   }
   currentThread->Finish();

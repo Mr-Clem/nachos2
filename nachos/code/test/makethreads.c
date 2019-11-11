@@ -1,6 +1,6 @@
 #include "syscall.h"
 
-volatile int i = 5;
+volatile int i = 9;
 
 
 void print(void* x)
@@ -17,7 +17,7 @@ int  main() {
     for(z;z<i;z++){
       ThreadCreate(print,c);
     }
-    PutString("Petit test");
+    PutString("Petit test\n");
     ThreadExit();
     return 0;
 }

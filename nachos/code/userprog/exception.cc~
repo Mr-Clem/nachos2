@@ -184,7 +184,8 @@ ExceptionHandler (ExceptionType which)
           DEBUG('s',"f:%d\n",f);
           int id = do_ThreadCreate(f,args);
           if(id == -1){
-            synchconsole->SynchPutString("Sorry no more space");
+            synchconsole->SynchPutString("Can't create anymore");
+            interrupt->Halt();
           }
           break;
         }

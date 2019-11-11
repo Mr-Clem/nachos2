@@ -1,13 +1,13 @@
 #include "syscall.h"
 
-volatile int i = 5;
+volatile int i = 50;
 
 
 void print(void* x)
 {
   char* c = (char*) x;
-  PutChar(*c);
-  PutChar(*c);
+  PutString(c);
+  PutChar('\n');
   ThreadExit();
 }
 
@@ -17,6 +17,7 @@ int  main() {
     for(z;z<i;z++){
       ThreadCreate(print,c);
     }
-    PutString("Petit test");
+    PutString("Petit test\n");
+    ThreadExit();
     return 0;
 }
