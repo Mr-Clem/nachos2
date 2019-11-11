@@ -6,8 +6,8 @@ volatile int i = 5;
 void print(void* x)
 {
   char* c = (char*) x;
-  PutString(c);
-  PutChar('\n');
+  PutChar(*c);
+  PutChar(*c);
   ThreadExit();
 }
 
@@ -18,6 +18,5 @@ int  main() {
       ThreadCreate(print,c);
     }
     PutString("Petit test");
-    ThreadExit();
     return 0;
 }
