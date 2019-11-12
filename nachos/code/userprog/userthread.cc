@@ -28,35 +28,37 @@ static void StartUserThread(void *schmurtz){
   DEBUG('x', "reading PCReg+4: %d, reading NextPCReg: %d\n", machine->ReadRegister(PCReg) + 4, machine->ReadRegister(NextPCReg));
 
   DEBUG('x', "nb_thread %d\n", currentThread->space->nb_thread);
-  
-  int stackTop = -1;
-  int placeInBitMap;
-  int* tab;
-  while(stackTop ==-1){
-    tab = currentThread->space->AllocateUserStack();
-    placeInBitMap = tab[0];
-    stackTop = tab[1];
-  }
+
+  int stackTop = t[2];
   machine->WriteRegister(StackReg, stackTop);
   DEBUG('x', "stacktop: %d, reading StackReg: %d\n\n", stackTop, machine->ReadRegister(StackReg));
-  
+
   machine->Run();
 }
 
 int do_ThreadCreate(int f, int arg){
-  
+
   if(currentThread->space->nb_thread>=currentThread->space->MAX_THREAD){
     return -1;
   }
+
   m_t->Acquire();
+  int placeInBitMap = currentThread->space->threadTable->Find();
+  if(placeInBitMap == -1){
+      return-1;
+  }
+  int stackTop = currentThread->space->AllocateUserStack(placeInBitMap);
   currentThread->space->nb_thread++;
   m_t->Release();
-  Thread* newThread = new Thread("newThread");
+
+  Thread* newThread = new Thread("newThread",placeInBitMap);
   DEBUG('w', "création\n");
-  int* schmurtz = new int[2];
+
+  int* schmurtz = new int[3];
   schmurtz[0]=f;
   schmurtz[1]=arg;
-  DEBUG('x',"f vaut: %d\narg vaut: %d\n", schmurtz[0], schmurtz[1]);
+  schmurtz[2]=stackTop;
+  DEBUG('x',"f vaut: %d\narg vaut: %d\n", schmurtz[0], schmurtz[1], schmurtz[2]);
   DEBUG('x', "Qu'y a t il dans schmurtz?\n réponse:%d\n", schmurtz);
   newThread->Start(StartUserThread, schmurtz);
   return 0;
@@ -65,8 +67,12 @@ int do_ThreadCreate(int f, int arg){
 void do_ThreadExit(){
   m_t->Acquire();
   currentThread->space->nb_thread --;
+  if(currentThread->thread_num >= 0){
+    DEBUG('c', "je quitte trash %d\n", currentThread->thread_num);
+    currentThread->space->threadTable->Clear(currentThread->thread_num);
+    }
   m_t->Release();
-  if(currentThread->space->nb_thread==0)
+  if(currentThread->space->nb_thread<=0)
     interrupt->Halt();
   currentThread->Finish();
 }

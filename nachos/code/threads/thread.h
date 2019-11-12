@@ -1,4 +1,4 @@
-// thread.h 
+// thread.h
 //      Data structures for managing threads.  A thread represents
 //      sequential execution of code within a program.
 //      So the state of a thread includes the program counter,
@@ -84,7 +84,7 @@ class Thread:dontcopythis
     unsigned long machineState[MachineStateSize];	// all registers except for stackTop
 
   public:
-      Thread (const char *debugName);	// initialize a Thread
+      Thread (const char *debugName, int number);	// initialize a Thread
      ~Thread ();		// deallocate a Thread
     // NOTE -- thread being deleted
     // must not be running when delete
@@ -113,6 +113,7 @@ class Thread:dontcopythis
     {
 	printf ("%s, ", name);
     }
+    int thread_num;
 
 #ifdef USER_PROGRAM
     void DumpThreadState(FILE *output, int ptr_x, unsigned virtual_x, unsigned virtual_y, unsigned blocksize);
@@ -145,7 +146,7 @@ class Thread:dontcopythis
     void RestoreUserState ();	// restore user-level register state
 
     AddrSpace *space;		// User code this thread is running.
-    
+
 #endif
 };
 

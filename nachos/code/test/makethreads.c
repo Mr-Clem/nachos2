@@ -1,6 +1,6 @@
 #include "syscall.h"
 
-volatile int i = 9;
+volatile int i = 50;
 
 
 void print(void* x)

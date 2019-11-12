@@ -303,12 +303,12 @@ AddrSpace::RestoreState ()
     machine->pageTableSize = numPages;
 }
 #ifdef CHANGED
-/*int
+int
 AddrSpace::AllocateUserStack(int NOT)
 {
-  return (numPages*PageSize)- (256*NOT);
-}*/
-int*
+  return (numPages*PageSize)- (256*(NOT+1));
+}
+/*int*
 AddrSpace::AllocateUserStack()
 {
   int* tab = new int[2];
@@ -320,5 +320,5 @@ AddrSpace::AllocateUserStack()
     freePage = (numPages*PageSize)-(256*(freePage+1));
   tab[1]=freePage;
   return tab;
-}
+}*/
 #endif//CHANGED

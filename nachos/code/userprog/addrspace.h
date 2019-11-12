@@ -21,7 +21,7 @@
 #include "bitmap.h"
 
 #ifdef CHANGED
-#define UserStacksAreaSize		8192	// increase this as necessary!
+#define UserStacksAreaSize		4096	// increase this as necessary!
 class BitMap;
 
 
@@ -31,7 +31,7 @@ class AddrSpace:dontcopythis
 public:
 #ifdef CHANGED
 int MAX_THREAD = (UserStacksAreaSize/256);
-int nb_thread = 0;
+int nb_thread = 1;
 int actual_Thread;
 #endif //CHANGED
 AddrSpace (OpenFile * executable);	// Create an address space,
@@ -51,7 +51,7 @@ unsigned Dump(FILE *output, unsigned virtual_x, unsigned virtual_width,
 // Dump program layout as SVG
 unsigned NumPages() { return numPages; }
 #ifdef CHANGED
-int* AllocateUserStack();
+int AllocateUserStack(int NOT);
 BitMap* threadTable;
 
 #endif //CHANGED
