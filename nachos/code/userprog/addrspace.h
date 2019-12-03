@@ -26,6 +26,7 @@ class BitMap;
 
 
 #endif//CHANGED
+
 class AddrSpace:dontcopythis
 {
 public:
