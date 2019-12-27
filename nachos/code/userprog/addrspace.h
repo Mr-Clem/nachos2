@@ -19,6 +19,7 @@
 #include "noff.h"
 #include "list.h"
 #include "bitmap.h"
+#include "pageprovider.h"
 
 #ifdef CHANGED
 #define UserStacksAreaSize		4096	// increase this as necessary!

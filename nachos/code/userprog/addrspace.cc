@@ -184,6 +184,7 @@ AddrSpace::~AddrSpace ()
         pageprovider->ReleasePage(pageTable[i].physicalPage);
       }
   }
+  delete pageprovider;
   delete [] pageTable;
   delete threadTable;
   // End of modification
