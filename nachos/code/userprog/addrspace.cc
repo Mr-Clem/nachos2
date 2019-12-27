@@ -132,7 +132,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     }
 
     for (i = 0; i < numPages; i++){
-        page = pageprovider->GetEmptyPage();
+        int page = pageprovider->GetEmptyPage();
 	      //pageTable[i].physicalPage = i+1;	// for now, phys page # = virtual page #+1
         pageTable[i].physicalPage = page;
         pageTable[i].valid = TRUE;
@@ -180,10 +180,9 @@ AddrSpace::~AddrSpace ()
 {
   // LB: Missing [] for delete
   // delete pageTable;
-  for (int i = 0; i < numPages; i++)
-      {
+  unsigned i;
+  for (i = 0; i < numPages; i++){
         pageprovider->ReleasePage(pageTable[i].physicalPage);
-      }
   }
   delete pageprovider;
   delete [] pageTable;
