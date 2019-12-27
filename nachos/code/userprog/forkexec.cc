@@ -20,10 +20,6 @@ int do_ForkExec(const char* s) {
       return -1;
     }
   space = new AddrSpace (executable);
-  if (!space->isUsable()) {
-    delete space;
-    return -1;
-  }
   delete executable;	// close file
   Thread* newThread = new Thread("UserThread 1", -1);
   newThread->space = space;
