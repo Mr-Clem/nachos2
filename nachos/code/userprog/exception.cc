@@ -119,8 +119,7 @@ ExceptionHandler (ExceptionType which)
         case SC_Exit:
         {
           DEBUG('s', "Exit\n");
-          printf("\nreturn value %d\n\n",machine->ReadRegister(2));
-          interrupt->Halt ();
+          interrupt->Exit();
           break;
         }
         case SC_PutChar:
