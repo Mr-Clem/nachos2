@@ -127,7 +127,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
     pageTable = new TranslationEntry[numPages];
     int numClear = pageprovider->NumAvailPage();
 
-    if (numberClear < numPages) {
+    if (numClear < numPages) {
       return;
     }
 
