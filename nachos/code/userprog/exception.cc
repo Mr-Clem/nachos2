@@ -193,6 +193,17 @@ ExceptionHandler (ExceptionType which)
           do_ThreadExit();
           break;
         }
+        case SC_ForkExec :
+        {
+          DEBUG('s', "ForkExec\n ");
+          char copyStringTo[MAX_STRING_SIZE];
+          int arg = machine->ReadRegister(4);
+          synchconsole->copyStringFromMachine(arg, copyStringTo,(unsigned) MAX_STRING_SIZE);
+          int res = do_ForkExec(copyStringTo);
+          if (res == -1)
+            synchconsole->SynchPutString("\n-- ForkExec was not executed : not enough memory--\n");
+          break;
+}
 #endif//CHANGED
 		default:
 		  {
