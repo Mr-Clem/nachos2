@@ -120,7 +120,7 @@ ExceptionHandler (ExceptionType which)
         case SC_Exit:
         {
           DEBUG('s', "Exit\n");
-          interrupt->Exit();
+          interrupt->Halt();
           break;
         }
         case SC_PutChar:
