@@ -97,6 +97,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 {
     unsigned int i, size;
 
+
     executable->ReadAt (&noffH, sizeof (noffH), 0);
     if ((noffH.noffMagic != NOFFMAGIC) &&
 	(WordToHost (noffH.noffMagic) == NOFFMAGIC))
@@ -121,14 +122,22 @@ AddrSpace::AddrSpace (OpenFile * executable)
 	   numPages, size);
 // first, set up the translation
 #ifdef CHANGED
+    pageprovider = new PageProvider(NumPhysPages);
     pageTable = new TranslationEntry[numPages];
-    for (i = 0; i < numPages; i++)
-      {
-	  pageTable[i].physicalPage = i+1;	// for now, phys page # = virtual page #+1
-	  pageTable[i].valid = TRUE;
-	  pageTable[i].use = FALSE;
-	  pageTable[i].dirty = FALSE;
-	  pageTable[i].readOnly = FALSE;	// if the code segment was entirely on
+    numClear = pageprovider->NumAvailPage();
+
+    if (numberClear < numPages) {
+      return;
+    }
+
+    for (i = 0; i < numPages; i++){
+        page = pageprovider->GetEmptyPage();
+	      //pageTable[i].physicalPage = i+1;	// for now, phys page # = virtual page #+1
+        pageTable[i].physicalPage = page;
+        pageTable[i].valid = TRUE;
+	      pageTable[i].use = FALSE;
+	      pageTable[i].dirty = FALSE;
+	      pageTable[i].readOnly = FALSE;	// if the code segment was entirely on
 	  // a separate page, we could set its
 	  // pages to be read-only
       }
@@ -170,6 +179,11 @@ AddrSpace::~AddrSpace ()
 {
   // LB: Missing [] for delete
   // delete pageTable;
+  for (int i = 0; i < numPages; i++)
+      {
+        pageprovider->ReleasePage(pageTable[i].physicalPage);
+      }
+  }
   delete [] pageTable;
   delete threadTable;
   // End of modification

@@ -34,6 +34,7 @@ public:
 int MAX_THREAD = (UserStacksAreaSize/256);
 int nb_thread = 1;
 int actual_Thread;
+PageProvider* pageprovider;
 #endif //CHANGED
 AddrSpace (OpenFile * executable);	// Create an address space,
 // initializing it with the program
