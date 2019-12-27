@@ -23,6 +23,7 @@
 #include "new"
 #ifdef CHANGED
 #include "synch.h"
+#include "pageprovider.h"
 Lock* m_bitmap = new Lock("m_bitmap");
 #endif//CHANGED
 //----------------------------------------------------------------------
