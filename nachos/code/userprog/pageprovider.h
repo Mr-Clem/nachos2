@@ -3,7 +3,8 @@
 #define PAGEPROVIDER_H
 
 #include "bitmap.h"
-#include "synch.h"
+
+class Semaphore;
 
 class PageProvider:dontcopythis {
   public:
