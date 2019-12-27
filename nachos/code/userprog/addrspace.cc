@@ -125,7 +125,7 @@ AddrSpace::AddrSpace (OpenFile * executable)
 #ifdef CHANGED
     pageprovider = new PageProvider(NumPhysPages);
     pageTable = new TranslationEntry[numPages];
-    numClear = pageprovider->NumAvailPage();
+    int numClear = pageprovider->NumAvailPage();
 
     if (numberClear < numPages) {
       return;
