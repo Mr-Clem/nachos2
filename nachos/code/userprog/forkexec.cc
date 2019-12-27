@@ -10,7 +10,7 @@ static void StartForkExec(void *) {
   machine->Run();
 }
 
-int do_ForkExec(const char*s) {
+int do_ForkExec(const char* s) {
   OpenFile *executable = fileSystem->Open (s);
   AddrSpace *space;
 
